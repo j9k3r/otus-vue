@@ -5,6 +5,6 @@
 
 <template>
   <main>
-    <Products />
+      <Products />
   </main>
 </template>

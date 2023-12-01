@@ -4,9 +4,10 @@
       <header class="header">
         <h1>products</h1>
       </header>
-      <section class="main">
+      <section class="main" v-if="!isLoaded">
         <ul>
-          <li v-for="product in products">
+          l
+          <li v-for="product in products" :key="product.id">
             {{ product.id }}, {{ product.title }}
           </li>
         </ul>
@@ -21,16 +22,27 @@
 <style scoped></style>
 
 <script setup>
-// export default {};
 import {onMounted, ref} from "vue";
-import axios from "axios";
-const products = ref([])
-
+import ProductsApi from "@/components/services/productsApi";
+const products = ref({})
+const isLoaded = ref(true);
 
 onMounted(async () => {
-  const res =  (((await axios.get("https://fakestoreapi.com/products"))))
-  products.value = res.data
-  console.log(products)
+
+  ProductsApi.getProducts(isLoaded).then((data) => {
+    isLoaded.value = data.isLoaded
+    products.value = data.data
+    // console.log(data)
+  })
+
+
+  //через промис
+  // products.value = ProductsApi.getProducts()
+  //     .then((data) => {
+  //     products.value = data
+  //   });
+
+  // console.log(products)
 })
 
 
