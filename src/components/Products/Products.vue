@@ -26,7 +26,8 @@ import ProductsApi from "@/components/services/productsApi";
 const isLoaded = ref(true)
 const rawProducts = ref({})
 
-onMounted(async () => {
+// onMounted(async () => {
+onMounted( () => {
 
   ProductsApi.getProducts(isLoaded.value).then((data) => {
     console.log(data)
