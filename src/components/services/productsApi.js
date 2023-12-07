@@ -7,7 +7,7 @@ import axios from 'axios';
 export default {
     getProducts(isLoaded) {
     return axios.get('https://fakestoreapi.com/products').then((response) => {
-        return {isLoaded: isLoaded.value = false, data: response.data};
+        return {isLoaded: isLoaded = false, data: response.data};
     })
 
 

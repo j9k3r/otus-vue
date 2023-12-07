@@ -6,7 +6,10 @@
       </header>
       <section class="main" v-if="!isLoaded">
         <ul>
-          l
+          <p><input type="text" v-model="title" /></p>
+
+<!--          <h1 style="color: red">{{products}}</h1>-->
+
           <li v-for="product in products" :key="product.id">
             {{ product.id }}, {{ product.title }}
           </li>
@@ -22,16 +25,33 @@
 <style scoped></style>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import ProductsApi from "@/components/services/productsApi";
-const products = ref({})
+const rawProducts = ref({})
+// const rawProducts = reactive({})
+const title = ref('')
 const isLoaded = ref(true);
+// rawProducts, title
+const products = computed( () => {
+
+  // return rawProducts.value
+      if (isLoaded) {
+        return rawProducts.filter(function (elem) {
+          if (title === '') return true;
+          else return elem.title.indexOf(title) > -1;
+        })
+      }
+    // return rawProducts.value
+    }
+)
 
 onMounted(async () => {
 
-  ProductsApi.getProducts(isLoaded).then((data) => {
+  ProductsApi.getProducts(isLoaded.value).then((data) => {
+    console.log(data)
     isLoaded.value = data.isLoaded
-    products.value = data.data
+    rawProducts.value = data.data
+
     // console.log(data)
   })
 
