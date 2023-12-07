@@ -6,11 +6,7 @@
       </header>
       <section class="main" v-if="!isLoaded">
         <ul>
-          <p><input type="text" v-model="title" /></p>
-
-<!--          <h1 style="color: red">{{products}}</h1>-->
-
-          <li v-for="product in products" :key="product.id">
+          <li v-for="product in rawProducts" :key="product.id">
             {{ product.id }}, {{ product.title }}
           </li>
         </ul>
@@ -27,23 +23,8 @@
 <script setup>
 import {computed, onMounted, reactive, ref} from "vue";
 import ProductsApi from "@/components/services/productsApi";
+const isLoaded = ref(true)
 const rawProducts = ref({})
-// const rawProducts = reactive({})
-const title = ref('')
-const isLoaded = ref(true);
-// rawProducts, title
-const products = computed( () => {
-
-  // return rawProducts.value
-      if (isLoaded) {
-        return rawProducts.filter(function (elem) {
-          if (title === '') return true;
-          else return elem.title.indexOf(title) > -1;
-        })
-      }
-    // return rawProducts.value
-    }
-)
 
 onMounted(async () => {
 
