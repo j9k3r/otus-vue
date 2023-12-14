@@ -6,42 +6,61 @@
       </header>
       <section class="main" v-if="!isLoaded">
 
-          <p><input type="text" v-model="title" /></p>
+          <p><input type="text" v-model="title" /><label>название</label></p>
+          <p><input type="number" step="0.01" min="0" v-model="price" /><label>цена</label></p>
 
-<!--          <h1 style="color: red">{{products}}</h1>-->
-<!--        <ul>-->
-<!--          <li v-if="!isLoaded" v-for="product in rawProducts" :key="product.id">-->
-<!--            {{ product.id }}, {{ product.title }}-->
-<!--          </li>-->
-<!--        </ul>-->
-          <product-list v-if="!isLoaded" :raw-products="rawProducts" :title="title"></product-list>
-<!--          <product-list v-if="!isLoaded" :raw-roducts="rawProducts.value"></product-list>-->
+
+          <product-list id="products" v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>
 
 
 
       </section>
-      <footer class="footer"></footer>
+      <footer class="footer">
+        <Order v-if="!isLoaded" :raw-products="rawProducts" :order="order" v-on:checked-product="updateOrder">
+            продукты:
+        </Order>
+      </footer>
     </section>
     <footer class="info"></footer>
   </div>
 </template>
 
-<style scoped></style>
-
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import ProductsApi from "@/components/services/productsApi";
 import ProductList from "@/components/Products/ProductList.vue";
+import Order from "@/components/Products/Order.vue";
 
 const rawProducts = ref({})
-// const rawProducts = reactive({})
 const title = ref('')
-const isLoaded = ref(true);
+const price = ref(0.00)
+const isLoaded = ref(true)
+
+const order = ref([])
 // rawProducts, title
 
+function updateOrder(product) {
+  // console.log(product)
+
+  //поиск элемента
+  // let orderProduct = order.value.find(ord => ord.id === product.id)
+  let orderProduct = order.value.indexOf(parseInt(product))
+
+  // let orderProduct = order.value.find(ord => ord ===  parseInt(product))
+
+  console.log(orderProduct)
+  if (orderProduct === -1) {
+
+    // order.value.push(parseInt(product))
+    order.value.push(parseInt(product))
+  } else {
+    order.value.splice(orderProduct,1)
+  }
+
+  // console.log(orderProduct)
+}
 
 onMounted( () => {
-
   ProductsApi.getProducts(isLoaded.value).then((data) => {
     console.log(data)
     isLoaded.value = data.isLoaded
@@ -60,7 +79,13 @@ onMounted( () => {
 
   // console.log(products)
 })
-
-
-
 </script>
+
+<style scoped>
+#products {
+  height: 50vh;
+  overflow-y: auto;
+  width: 50vw;
+  border: 1px;
+}
+</style>
