@@ -3,17 +3,12 @@
     <section class="productsapp">
       <header class="header">
         <h1>products</h1>
+        <p><input type="text" v-model="title" /><label>название</label></p>
+        <p><input type="number" step="0.01" min="0" v-model="price" /><label>цена</label></p>
       </header>
       <section class="main" v-if="!isLoaded">
-
-          <p><input type="text" v-model="title" /><label>название</label></p>
-          <p><input type="number" step="0.01" min="0" v-model="price" /><label>цена</label></p>
-
-
-          <product-list id="products" v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>
-
-
-
+        <product-list id="products" v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>
+        <products-form :order="order"></products-form>
       </section>
       <footer class="footer">
         <Order v-if="!isLoaded" :raw-products="rawProducts" :order="order" v-on:checked-product="updateOrder">
@@ -26,10 +21,11 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import ProductsApi from "@/components/services/productsApi";
 import ProductList from "@/components/Products/ProductList.vue";
 import Order from "@/components/Products/Order.vue";
+import ProductsForm from "@/components/Products/ProductsForm.vue";
 
 const rawProducts = ref({})
 const title = ref('')
@@ -50,8 +46,6 @@ function updateOrder(product) {
 
   console.log(orderProduct)
   if (orderProduct === -1) {
-
-    // order.value.push(parseInt(product))
     order.value.push(parseInt(product))
   } else {
     order.value.splice(orderProduct,1)
@@ -81,11 +75,13 @@ onMounted( () => {
 })
 </script>
 
-<style scoped>
+<style>
 #products {
   height: 50vh;
   overflow-y: auto;
   width: 50vw;
   border: 1px;
+
+  float: left;
 }
 </style>
