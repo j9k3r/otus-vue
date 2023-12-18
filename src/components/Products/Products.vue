@@ -11,7 +11,7 @@
         <products-form :order="order"></products-form>
       </section>
       <footer class="footer">
-        <Order v-if="!isLoaded" :raw-products="rawProducts" :order="order" v-on:checked-product="updateOrder">
+        <Order v-if="!isLoaded" :raw-products="rawProducts" :order="order" v-on:checked-product="updateOrder" v-on:checked-product-decrease="decreaseOrder" v-on:remove-order="removeOrder">
             продукты:
         </Order>
       </footer>
@@ -36,22 +36,53 @@ const order = ref([])
 // rawProducts, title
 
 function updateOrder(product) {
+
   // console.log(product)
 
+  let prId = parseInt(product)
+
   //поиск элемента
-  // let orderProduct = order.value.find(ord => ord.id === product.id)
-  let orderProduct = order.value.indexOf(parseInt(product))
+  let orderProduct = -1
+  if (order.value.length !== 0) {
+    // orderProduct = order.value.find(ord => ord.id === prId)
+    orderProduct = order.value.findIndex(ord => ord.id === prId)
+
+  }
+  // let orderProduct = order.value.indexOf(parseInt(product))
 
   // let orderProduct = order.value.find(ord => ord ===  parseInt(product))
 
-  console.log(orderProduct)
+  // console.log(typeof orderProduct)
+  // console.log( orderProduct)
   if (orderProduct === -1) {
-    order.value.push(parseInt(product))
+    order.value.push({ id: prId, quantity: 1})
+    // order.value.push(parseInt(product))
+    // order.value.splice(0, 0, { id: prId, quantity: 1})
   } else {
-    order.value.splice(orderProduct,1)
+    order.value[orderProduct].quantity += 1
+
+    // order.value.splice(orderProduct, 1, { id: prId, quantity: orderProduct.quantity+1})
+    // console.log(orderProduct.key)
+    // order.value.splice(orderProduct,1)
   }
 
   // console.log(orderProduct)
+}
+
+function decreaseOrder (product) {
+  let prId = parseInt(product)
+  let orderProduct = order.value.findIndex(ord => ord.id === prId)
+  if (order.value[orderProduct].quantity !== 1) {
+    order.value[orderProduct].quantity -= 1
+  } else {
+    order.value.splice(orderProduct,1)
+  }
+}
+
+function removeOrder () {
+  if (order.value.length !== 0) {
+    order.value.splice(0, order.value.length)
+  }
 }
 
 onMounted( () => {

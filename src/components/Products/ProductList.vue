@@ -1,14 +1,15 @@
 <template>
   <div>
-    <ul>
+    <ul id="list-product">
       <li v-for="(product, name, index) in products" :key="product.id">
-<!--        <input type="checkbox" @change="emit('checked-product', product)" :id="product.id" :value="product.id" v-model="checkedProducts" >-->
-<!--        <input type="checkbox" :id="product.id" :value="product.id" v-model="checkedProducts">-->
-<!--        <input type="checkbox" :id="product.id" :value="product.id" v-model="prOrder" @change="emit('checked-product', $event.target)">-->
-<!--        <input type="checkbox" :id="product.id" :value="product.id" :checked="props.order.includes(product.id)" @change="emit('checked-product', $event.target.id)">-->
-        <input type="checkbox" :id="product.id" :value="product.id" :checked="props.order.includes(product.id)" @change="emit('checked-product', $event.target.id)">
-        <label :for="product.id">{{product.title}}</label>
-        <div>{{product.price}}</div>
+        <div>
+          <label :for="product.id">{{product.title}}</label>
+          <div class="add-gr-list">
+            <div>{{product.price}}</div>
+            <button :id="product.id" @click="emit('checked-product', $event.target.id)">+</button>
+          </div>
+
+        </div>
       </li>
     </ul>
   </div>
@@ -30,27 +31,6 @@ const props = defineProps({
 // const emits =  defineEmits(['checkedProducts'])
 const emit = defineEmits()
 
-// function checkedProduct() {
-//   emit('checked-product', 'new value')
-//   // console.log(e)
-// }
-
-
-// const checkedOrder = computed(() => {
-//   return props.rawProducts.map(object => object.id);
-  // return Object.keys(props.rawProducts).map((key) => key.id);
-// })
-
-// const checkedProducts = computed({
-//   get: () => props.order.map(object => object.id),
-//   set: val => {
-//     console.log(Event.target)
-//     emit('checked-product', val)
-//   }
-// })
-
-// const checkedProducts = computed(() => {
-//   props.order.map(object => object.id)
 // })
 
 const prOrder = computed({
@@ -71,40 +51,6 @@ const flagFilterPrice = computed( () => {
   return true
 })
 
-// сумма всех цен в сыром запросе
-// const calcSum = computed( () => {
-//   let total = 0;
-//   props.rawProducts.forEach((item, i) => {
-//     total += item.price
-//   });
-//   return total;
-// })
-
-//максимальная сумма товара в сыром запросе
-// const maxPrice = computed(() => {
-//   return Math.max(...props.rawProducts.map(property => property.price))
-// })
-
-//фильтр по названию
-// const filterTitleProduct = computed( () => {
-//   return props.rawProducts.filter(function (elem) {
-//     if (!flagFilterTitle.value) return true
-//     return elem.title.indexOf(props.title) > -1;
-//   })
-// })
-
-//фильтр по цене
-// const filterPriceProduct = computed( () => {
-//   return props.rawProducts.filter(function (elem) {
-//     if (!flagFilterPrice.value) return true
-//     else {
-//       // return elem.price >= props.price  // цена больше заданного значения
-//       return (elem.price >= 0 && elem.price <= props.price); // цена меньше заданного значения
-//     }
-//   })
-// })
-
-
 const products = computed( () => {
   return props.rawProducts.filter(function (elem) {
     let conditions = [true];
@@ -118,11 +64,6 @@ const products = computed( () => {
     }
     return conditions.every(condition => condition);
   })
-
-// количество объектов в фильтрах
-//   let rawProductsCount = Object.keys(props.rawProducts.value).length
-//   let filterTitleCount = Object.keys(filterTitleProduct.value).length
-//   let filterPriceCount = Object.keys(filterPriceProduct.value).length
 
 
 
@@ -154,5 +95,13 @@ const products = computed( () => {
 
 
 <style>
+
+#list-product {
+  padding: 0px 20px 0px 20px;
+  .add-gr-list {
+    display: flex;
+    justify-content: space-between;
+  }
+}
 
 </style>
