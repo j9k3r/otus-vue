@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section id="product-form" class="main">
     Vue 3 - VeeValidate - yup
 <!-- yup + vee-->
 <!--    <Form @submit="onSubmit" :validation-schema="schema">-->
@@ -71,7 +71,7 @@
 <!--      <button>Отправить</button>-->
 
     </Form>
-  </div>
+  </section>
 </template>
 
 <script setup>
@@ -212,8 +212,14 @@ label {
   color: red;
 }
 
-.form-row {
-  margin-top: 10px;
+form {
+  .form-row {
+    margin-top: 10px;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }
 
 .order-error {

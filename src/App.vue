@@ -1,19 +1,20 @@
 <template>
-  <div id="app">
-    <Products/>
-  </div>
+  <router-view></router-view>
+<!--  <main id="main">-->
+<!--    <Products/>-->
+<!--  </main>-->
 </template>
 
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import Products from "./components/Products/Products.vue";
+// import HelloWorld from './components/HelloWorld.vue'
+// import Products from "./components/Products/Products.vue";
 
 export default {
   name: "App",
   components: {
-    Products
+    // Products
   }
 };
 

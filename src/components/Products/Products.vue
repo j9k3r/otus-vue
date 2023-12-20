@@ -1,31 +1,35 @@
 <template>
-  <div class="products">
-    <section class="productsapp">
+  <MenuView></MenuView>
+  <section id="products" class="products">
       <header class="header">
         <h1>products</h1>
         <p><input type="text" v-model="title" /><label>название</label></p>
         <p><input type="number" step="0.01" min="0" v-model="price" /><label>цена</label></p>
+        <products-form :order="order"></products-form>
       </header>
       <section class="main" v-if="!isLoaded">
-        <product-list id="products" v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>
-        <products-form :order="order"></products-form>
+<!--        <product :product-id="productId" :is-loaded="isLoaded" v-on:is-loaded="isLoad"></product>-->
+<!--        <product :product-id="productId" :is-loaded="isLoaded"></product>-->
+        <product-list v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>
       </section>
       <footer class="footer">
         <Order v-if="!isLoaded" :raw-products="rawProducts" :order="order" v-on:checked-product="updateOrder" v-on:checked-product-decrease="decreaseOrder" v-on:remove-order="removeOrder">
             продукты:
         </Order>
       </footer>
-    </section>
-    <footer class="info"></footer>
-  </div>
+  </section>
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import ProductsApi from "@/components/services/productsApi";
 import ProductList from "@/components/Products/ProductList.vue";
 import Order from "@/components/Products/Order.vue";
 import ProductsForm from "@/components/Products/ProductsForm.vue";
+import MenuView from "@/views/MenuView.vue";
+// import Product from "@/components/Products/Product.vue";
+
+// const productId = ref(1);
 
 const rawProducts = ref({})
 const title = ref('')
@@ -34,6 +38,12 @@ const isLoaded = ref(true)
 
 const order = ref([])
 // rawProducts, title
+
+watch(order.value,  (newOrder, oldOrder) => {
+  console.log(newOrder)
+  localStorage.setItem("order", JSON.stringify(newOrder));
+  // localStorage.order = newOrder
+})
 
 function updateOrder(product) {
 
@@ -65,8 +75,12 @@ function updateOrder(product) {
     // console.log(orderProduct.key)
     // order.value.splice(orderProduct,1)
   }
-
+  localStorage.setItem("order", JSON.stringify(order.value));
   // console.log(orderProduct)
+}
+
+function isLoad(loadState) {
+  isLoaded.value = loadState
 }
 
 function decreaseOrder (product) {
@@ -77,17 +91,26 @@ function decreaseOrder (product) {
   } else {
     order.value.splice(orderProduct,1)
   }
+  localStorage.setItem("order", JSON.stringify(order.value));
 }
 
 function removeOrder () {
   if (order.value.length !== 0) {
     order.value.splice(0, order.value.length)
   }
+  localStorage.setItem("order", JSON.stringify(order.value));
 }
 
 onMounted( () => {
+  let localOrder = JSON.parse(localStorage.getItem("order"))
+  // console.log(localOrder)
+  if (localOrder !== null) {
+    order.value = localOrder;
+  }
+
+
   ProductsApi.getProducts(isLoaded.value).then((data) => {
-    console.log(data)
+    // console.log(data)
     isLoaded.value = data.isLoaded
     rawProducts.value = data.data
 
@@ -108,9 +131,11 @@ onMounted( () => {
 
 <style>
 #products {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
   height: 50vh;
   overflow-y: auto;
-  width: 50vw;
   border: 1px;
 
   float: left;

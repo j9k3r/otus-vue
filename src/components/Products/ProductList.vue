@@ -1,10 +1,13 @@
 <template>
-  <div>
-    <ul id="list-product">
+  <section id="product-list" class="main">
+    <ul >
       <li v-for="(product, name, index) in products" :key="product.id">
         <div>
-          <label :for="product.id">{{product.title}}</label>
+          <label :for="product.id">
+            <router-link :to="{'name':'product', params: {productId: product.id} }">{{product.title}}</router-link>
+          </label>
           <div class="add-gr-list">
+
             <div>{{product.price}}</div>
             <button :id="product.id" @click="emit('checked-product', $event.target.id)">+</button>
           </div>
@@ -12,11 +15,13 @@
         </div>
       </li>
     </ul>
-  </div>
+  </section>
 </template>
 
 <script setup>
 import {computed, onMounted, reactive, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+
 const props = defineProps({
   rawProducts: Object,
   title: String,
@@ -27,6 +32,9 @@ const props = defineProps({
     // required: true
   // }
 })
+
+const router = useRouter()
+const route = useRoute()
 
 // const emits =  defineEmits(['checkedProducts'])
 const emit = defineEmits()
@@ -96,8 +104,10 @@ const products = computed( () => {
 
 <style>
 
-#list-product {
+#product-list {
   padding: 0px 20px 0px 20px;
+  overflow-y: scroll;
+  height: 400px;
   .add-gr-list {
     display: flex;
     justify-content: space-between;
