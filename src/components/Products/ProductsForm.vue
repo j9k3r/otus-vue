@@ -17,12 +17,12 @@
         <div class="form-group col">
           <label>ФИО <i>*</i> </label>
           <Field name="fio" type="text" class="form-control" :class="{ 'is-invalid': errors.fio }" />
-          <div class="invalid-feedback">{{errors.fio}}</div>
+          <div class="err invalid-feedback">{{errors.fio}}</div>
         </div>
         <div class="form-group col">
           <label>Дата рождения <i>*</i> </label>
           <Field name="dob" type="date" class="form-control" :class="{ 'is-invalid': errors.dob }" />
-          <div class="invalid-feedback">{{errors.dob}}</div>
+          <div class="err invalid-feedback">{{errors.dob}}</div>
         </div>
       </div>
 
@@ -30,17 +30,17 @@
         <div class="form-group col">
           <label>Телефон <i>*</i> </label>
           <Field name="phone" type="text" class="form-control" :class="{ 'is-invalid': errors.phone }" />
-          <div class="invalid-feedback">{{errors.phone}}</div>
+          <div class="err invalid-feedback">{{errors.phone}}</div>
         </div>
         <div class="form-group col">
           <label>Email <i>*</i> </label>
           <Field name="email" type="text" class="form-control" :class="{ 'is-invalid': errors.email }" />
-          <div class="invalid-email">{{errors.email}}</div>
+          <div class="err invalid-email">{{errors.email}}</div>
         </div>
         <div class="form-group col">
           <label>согласие на обработку <i>*</i> </label>
           <Field name="isAgree" type="checkbox" :value="false" class="form-control" :class="{ 'is-invalid': errors.isAgree }" />
-          <div class="invalid-email">{{errors.isAgree}}</div>
+          <div class="err invalid-email">{{errors.isAgree}}</div>
         </div>
       </div>
 
@@ -208,7 +208,7 @@ label {
   }
 }
 
-.is-invalid {
+.err {
   color: red;
 }
 

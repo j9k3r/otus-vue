@@ -4,7 +4,7 @@
       <header class="header">
         <h1>products</h1>
         <p><input type="text" v-model="title" /><label>название</label></p>
-        <p><input type="number" step="0.01" min="0" v-model="price" /><label>цена</label></p>
+        <p><input type="number" step="0.01" min="0" v-model="price" /><label>максимальная цена</label></p>
       </header>
       <section class="main" v-if="!isLoaded">
         <product-list id="products" v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>

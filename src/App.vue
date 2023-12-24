@@ -1,6 +1,8 @@
 <template>
+  <router-view></router-view>
   <div id="app">
-    <Products/>
+<!--    <Products/>-->
+
   </div>
 </template>
 
@@ -13,7 +15,7 @@ import Products from "./components/Products/Products.vue";
 export default {
   name: "App",
   components: {
-    Products
+    // Products
   }
 };
 
