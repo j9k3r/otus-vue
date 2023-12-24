@@ -2,7 +2,20 @@
 import {Field, Form} from "vee-validate";
 import axios from "axios";
 import * as Yup from "yup";
+import {computed} from "vue";
 
+const categories = [
+                    {id: 1, title: "Category 1"},
+                    {id: 2, title: "Category 2"},
+                    {id: 3, title: "Category 3"},
+                    {id: 4, title: "Category 4"},
+];
+
+const cats = computed(() => {
+   return categories.map((cat, key) => (
+       key = cat.id.toString()
+  ))
+})
 
 function onSubmit(values) {
   axios.post(
@@ -23,7 +36,8 @@ const schema = Yup.object().shape({
         .integer('должно быть число')
         .transform((value) => (isNaN(value) ? undefined : value)).nullable(),
   category: Yup.string()
-        .required("Выберите категорию"),
+        .required("Выберите категорию")
+        .oneOf(cats.value, 'должно соответствовать id категории'),
         // .transform((values) => {
         //   return parseInt(values)
         // }),
@@ -68,12 +82,12 @@ const schema = Yup.object().shape({
         </div>
         <div class="form-group col">
           <label>Категория <i>*</i> </label>
-<!--          <Field  name="category" type="text" class="form-control" :class="{ 'is-invalid': errors.category }" />-->
           <Field id="category" as="select" name="category" class="form-control" :class="{ 'is-invalid': errors.category }">
             <option value="">Выберите категорию</option>
-            <option :value="1">Яблоки</option>
-            <option :value="2">Бананы</option>
-            <option :value="3">Апельсины</option>
+            <option v-for="(category, index) in categories" :value="category.id" :key="category.id">{{category.title}}</option>
+<!--            <option :value="1">Яблоки</option>-->
+<!--            <option :value="2">Бананы</option>-->
+<!--            <option :value="3">Апельсины</option>-->
           </Field>
           <div v-show="errors.category" class="err invalid-category">{{errors.category}}</div>
         </div>
