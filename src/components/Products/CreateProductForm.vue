@@ -13,7 +13,7 @@ const categories = [
 
 const cats = computed(() => {
    return categories.map((cat, key) => (
-       key = cat.id.toString()
+       cat.id.toString()
   ))
 })
 
