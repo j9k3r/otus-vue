@@ -14,6 +14,9 @@ import {useRouter} from "vue-router";
           <router-link class="nav-link" :to="{ 'name': 'login' }"><button>Login</button></router-link>
         </li>
         <li>
+          <router-link class="nav-link" :to="{ 'name': 'createProduct' }"><button>Create Product</button></router-link>
+        </li>
+        <li>
           <router-link class="nav-link" :to="{ 'name': 'about', params: {test: 'TeSt'} }"><button>About</button></router-link>
         </li>
       </ul>

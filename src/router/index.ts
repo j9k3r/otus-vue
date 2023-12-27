@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Products from "@/components/Products/Products.vue";
 import Product from "@/components/Products/Product.vue";
 import Login from "@/components/Login.vue";
+import CreateProductForm from "@/components/Products/CreateProductForm.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +26,14 @@ const router = createRouter({
       beforeEnter() {
         return auth()
       }
-
+    },
+    {
+      path: '/products/create',
+      name: 'createProduct',
+      component: CreateProductForm,
+      beforeEnter() {
+        return auth()
+      }
     },
     {
       path: '/login',
