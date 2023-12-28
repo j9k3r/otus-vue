@@ -1,25 +1,15 @@
 import axios from 'axios';
 
-
-// axios.defaults.withCredentials = true;
-// axios.defaults.url = 'https://fakestoreapi.com';
-
 export default {
-    getProducts(isLoaded) {
+    getProducts() {
         return axios.get('https://fakestoreapi.com/products').then((response) => {
-            return {isLoaded: isLoaded = false, data: response.data};
+            return response.data
         })
-
-//через промис
-//     async getProducts() {
-//         return (await Promise.resolve(axios.get('https://fakestoreapi.com/products').then((response) => {
-//             return (response.data);
-//         })))
     },
 
-    getProduct(isLoaded, productId) {
+    getProduct(productId) {
         return axios.get('https://fakestoreapi.com/products/' + productId).then((response) => {
-            return {isLoaded: isLoaded = true, data: response.data};
+            return response.data
         })
     }
 

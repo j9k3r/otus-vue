@@ -1,97 +1,42 @@
-<template>
-  <MenuView></MenuView>
-  <section id="products" class="products">
-      <header class="header">
-        <h1>products</h1>
-        <p><input type="text" v-model="title" /><label>название</label></p>
-        <p><input type="number" step="0.01" min="0" v-model="price" /><label>максимальная цена</label></p>
-        <products-form :order="order"></products-form>
-      </header>
-      <section class="main" v-if="!isLoaded">
-        <product-list v-if="!isLoaded" :raw-products="rawProducts" :title="title" :price="price" :order="order" v-on:checked-product="updateOrder"></product-list>
-      </section>
-      <footer class="footer">
-        <Order v-if="!isLoaded" :raw-products="rawProducts" :order="order" v-on:checked-product="updateOrder" v-on:checked-product-decrease="decreaseOrder" v-on:remove-order="removeOrder">
-            продукты:
-        </Order>
-      </footer>
-  </section>
-</template>
-
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import ProductsApi from "@/components/services/productsApi";
+import {onMounted, ref} from "vue";
 import ProductList from "@/components/Products/ProductList.vue";
 import Order from "@/components/Products/Order.vue";
 import ProductsForm from "@/components/Products/ProductsForm.vue";
 import MenuView from "@/views/MenuView.vue";
+import {useProductsStore} from "@/stores/products";
+import Login from "@/components/Login.vue";
 
+const products = useProductsStore()
+// products.getProductsData() //тоже будет работать потому что в setup
 
-const rawProducts = ref({})
 const title = ref('')
 const price = ref(0.00)
-const isLoaded = ref(true)
-
-const order = ref([])
-
-
-watch(order.value,  (newOrder, oldOrder) => {
-  console.log(newOrder)
-  localStorage.setItem("order", JSON.stringify(newOrder));
-})
-
-function updateOrder(product) {
-  let prId = parseInt(product)
-
-  //поиск элемента
-  let orderProduct = -1
-  if (order.value.length !== 0) {
-    orderProduct = order.value.findIndex(ord => ord.id === prId)
-
-  }
-  if (orderProduct === -1) {
-    order.value.push({ id: prId, quantity: 1})
-  } else {
-    order.value[orderProduct].quantity += 1
-  }
-  localStorage.setItem("order", JSON.stringify(order.value));
-}
-
-function isLoad(loadState) {
-  isLoaded.value = loadState
-}
-
-function decreaseOrder (product) {
-  let prId = parseInt(product)
-  let orderProduct = order.value.findIndex(ord => ord.id === prId)
-  if (order.value[orderProduct].quantity !== 1) {
-    order.value[orderProduct].quantity -= 1
-  } else {
-    order.value.splice(orderProduct,1)
-  }
-  localStorage.setItem("order", JSON.stringify(order.value));
-}
-
-function removeOrder () {
-  if (order.value.length !== 0) {
-    order.value.splice(0, order.value.length)
-  }
-  localStorage.setItem("order", JSON.stringify(order.value));
-}
 
 onMounted( () => {
-  let localOrder = JSON.parse(localStorage.getItem("order"))
-  if (localOrder !== null) {
-    order.value = localOrder;
-  }
-
-
-  ProductsApi.getProducts(isLoaded.value).then((data) => {
-    isLoaded.value = data.isLoaded
-    rawProducts.value = data.data
-  })
+  products.getProductsData()
 })
 </script>
+
+<template>
+  <MenuView></MenuView>
+  <section id="products" class="products">
+    <header class="header">
+      <h1>products</h1>
+      <p><input type="text" v-model="title" /><label>название</label></p>
+      <p><input type="number" step="0.01" min="0" v-model="price" /><label>максимальная цена</label></p>
+      <products-form></products-form>
+    </header>
+    <section class="main" v-if="!products.isLoading">
+      <product-list :raw-products="products.products" :title="title" :price="price"></product-list>
+    </section>
+    <footer class="footer">
+      <Order v-if="!products.isLoading" :raw-products="products.products">
+        продукты:
+      </Order>
+    </footer>
+  </section>
+</template>
 
 <style>
 #products {

@@ -1,53 +1,18 @@
-<template>
-  <section id="product-list" class="main">
-    <ul >
-      <li v-for="(product, name, index) in products" :key="product.id">
-        <div>
-          <label :for="product.id">
-            <router-link :to="{'name':'product', params: {productId: product.id} }">{{product.title}}</router-link>
-          </label>
-          <div class="add-gr-list">
-
-            <div>{{product.price}}</div>
-            <button :id="product.id" @click="emit('checked-product', $event.target.id)">+</button>
-          </div>
-
-        </div>
-      </li>
-    </ul>
-  </section>
-</template>
-
 <script setup>
 import {computed, onMounted, reactive, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import {useOrderStore} from "@/stores/order";
 
 const props = defineProps({
   rawProducts: Object,
   title: String,
   price: null,
-  order: Array
-    // {
-    // type: Number,
-    // required: true
-  // }
 })
+
+const order = useOrderStore()
 
 const router = useRouter()
 const route = useRoute()
-
-// const emits =  defineEmits(['checkedProducts'])
-const emit = defineEmits()
-
-// })
-
-const prOrder = computed({
-  get: () =>  props.order.map(object => object.id),
-  set: val => {
-    // console.log(val)
-  }
-})
-
 
 const flagFilterTitle = computed(() => {
   if (props.title === '') return false
@@ -72,35 +37,28 @@ const products = computed( () => {
     }
     return conditions.every(condition => condition);
   })
-
-
-
-
-
-
-  })
-
-// const checkedProducts = ref([])
-
-// проверка наличия объекта по ид в массиве
-// function isInArray(id, arr) {
-//   if (arr.some(e => e.id === id)) {
-//     return true
-//   }
-//   return false
-// }
-
-
-
-
-// onMounted( () => {
-  // console.log(rawProducts)
-// })
-
-
+})
 </script>
 
+<template>
+  <section id="product-list" class="main">
+    <ul >
+      <li v-for="(product, name, index) in products" :key="product.id">
+        <div>
+          <label :for="product.id">
+            <router-link :to="{'name':'product', params: {productId: product.id} }">{{product.title}}</router-link>
+          </label>
+          <div class="add-gr-list">
 
+            <div>{{product.price}}</div>
+            <button :id="product.id" @click="order.updateOrder($event.target.id)">+</button>
+          </div>
+
+        </div>
+      </li>
+    </ul>
+  </section>
+</template>
 
 <style>
 

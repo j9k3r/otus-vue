@@ -45,12 +45,12 @@ function onSubmit(values) {
         <button type="submit" class="btn btn-primary mr-1">Подтвердить</button>
       </Form>
 
-      <div v-else>
-        <div>Email: {{user.email}}</div>
-        <div>Password: {{user.password}}</div>
-
-        <button @click="user.updateUser({})">Выйти</button>
-      </div>
+<!--      <div v-else>-->
+<!--        <div>Email: {{user.email}}</div>-->
+<!--        <div>Password: {{user.password}}</div>-->
+<!--        <div v-if="user.fio !== ''">ФИО: {{user.fio}}</div>-->
+<!--        <button @click="user.updateUser({})">Выйти</button>-->
+<!--      </div>-->
     </section>
     <footer class="footer">
     </footer>

@@ -1,10 +1,11 @@
 <script setup>
-import {useRouter} from "vue-router";
+import UserInfoView from "@/views/UserInfoView.vue";
 
 </script>
 
 <template>
   <section id="menu" class="main">
+    <UserInfoView></UserInfoView>
     <nav>
       <ul>
         <li>

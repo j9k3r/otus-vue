@@ -22,7 +22,7 @@ const router = createRouter({
       path: '/products/:productId',
       name: 'product',
       component: Product,
-      props: (route) => ({productId: route.params.productId}),
+      props: (route) => ({productId: parseInt(route.params.productId)}),
       beforeEnter() {
         return auth()
       }
