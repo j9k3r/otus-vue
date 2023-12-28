@@ -1,13 +1,12 @@
 <script setup>
-import {onMounted, ref} from "vue";
 import MenuView from "@/views/MenuView.vue";
 
 import { Form, Field } from 'vee-validate';
 import * as Yup from 'yup';
 import router from "@/router";
+import {useUserStore} from "@/stores/user";
 
-const email = ref('')
-const password = ref('')
+const user = useUserStore()
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -18,60 +17,39 @@ const schema = Yup.object().shape({
       .min(6, 'минимум 6 символов')
 });
 
-const emit = defineEmits()
-
-function exitUser() {
-  localStorage.removeItem('user')
-  email.value = ''
-  password.value = ''
-}
-
-
 function onSubmit(values) {
-  email.value = values.email
-  password.value = values.password
-
-  localStorage.setItem("user", JSON.stringify(values));
+  user.updateUser(values)
   router.push({name: 'home'})
-
-  // console.log(JSON.stringify(values, null, 4));
 }
-
-onMounted( () => {
-  let user = JSON.parse(localStorage.getItem("user"))
-  if (user !== null) {
-    email.value = user.email
-    password.value = user.password
-  }
-})
 </script>
 
 <template>
   <menu-view></menu-view>
   <section id="login">
     <header class="header">
-      Login
+      <h1>Login</h1>
     </header>
     <section class="main">
-      <Form v-if="email === '' || password === ''" @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
+      <Form v-if="user.email === '' || user.password === ''" @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
         <div class="form-group col">
           <label>Email <i>*</i> </label>
           <Field name="email" type="text" class="form-control" :class="{ 'is-invalid': errors.email }" />
-          <div class="invalid-email">{{errors.email}}</div>
+          <div class="err invalid-email">{{errors.email}}</div>
         </div>
 
         <div class="form-group col">
-          <label>Password <i>*</i> </label>
+          <label>Пароль <i>*</i> </label>
           <Field name="password" type="password" class="form-control" autocomplete="on" :class="{ 'is-invalid': errors.password }" />
-          <div class="invalid-password">{{errors.password}}</div>
+          <div class="err invalid-password">{{errors.password}}</div>
         </div>
         <button type="submit" class="btn btn-primary mr-1">Подтвердить</button>
       </Form>
 
-      <div v-if="email !== '' && password !== ''">
-        <div>Email: {{email}}</div>
-        <div>Password: {{password}}</div>
-        <button @click="exitUser">Выйти</button>
+      <div v-else>
+        <div>Email: {{user.email}}</div>
+        <div>Password: {{user.password}}</div>
+
+        <button @click="user.updateUser({})">Выйти</button>
       </div>
     </section>
     <footer class="footer">
@@ -85,8 +63,24 @@ onMounted( () => {
   margin-top: 10px;
 }
 
-.order-error {
-  color: yellow;
+form {
+  label {
+    padding-right: 10px;
+    i {
+      color: yellow;
+    }
+  }
+
+  .err {
+    color: red;
+}
+  button {
+    margin-top: 10px;
+  }
+
+  .form-group {
+    //display: flex;
+  }
 }
 
 </style>
