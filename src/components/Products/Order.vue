@@ -18,7 +18,14 @@ const items = computed(() => {
 
 })
 
-
+//оставляю для unit теста
+const orderTotalPrice =  computed(() => {
+  let totalSum = 0
+  order.order.forEach(item  => {
+    totalSum += items.value[item.id].price * item.quantity
+  })
+  return totalSum.toFixed(2)
+})
 
 
 </script>
@@ -30,16 +37,18 @@ const items = computed(() => {
     </header>
 
     <section class="main">
+      <div>всего на: <span class="sum-price">{{orderTotalPrice}}$</span></div>
       <slot></slot> <button @click="order.removeOrder()">очистить</button>
       <ul>
         <!--      <li v-for="item in items" :key="item.id" @click="emit('checked-product', item.id)">{{item.id}} {{item.title}} <span style="color: red">X</span></li>-->
         <!--      <li v-for="item in order" :key="item" @click="emit('checked-product', item)">{{items[item].id}} {{items[item].title}} <span style="color: red">X</span></li>-->
 
         <li v-for="item in order.order" :key="item.id">
-          id = {{items[item.id].id}} <br>
+          id = {{items[item.id].id}} на сумму: <span class="sum-price">{{ (item.quantity * items[item.id].price).toFixed(2) }}$</span><br>
           {{items[item.id].title}} <br>
           <div class="btn-order-gr">
             <div>количество: <span style="color: cornflowerblue">{{item.quantity}}</span></div>
+
             <button :id="item.id" @click="order.updateOrder($event.target.id)" style="color: green">+</button>
             <button :id="item.id" @click="order.decreaseOrder($event.target.id)" style="color: red">-</button>
           </div>
@@ -60,6 +69,9 @@ const items = computed(() => {
   .btn-order-gr {
     display: flex;
     justify-content: space-between;
+  }
+  .sum-price {
+    color: pink;
   }
 }
 
