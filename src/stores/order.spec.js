@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach, expectTypeOf } from "v
 import { setActivePinia, createPinia } from "pinia"
 import {useOrderStore} from "@/stores/order"
 
-describe("Product store", () => {
+describe("Order store", () => {
     // const store = useOrderStore()
     const mockOrderData = JSON.parse( `[
             {
@@ -67,10 +67,9 @@ describe("Product store", () => {
 
     it('order mock local storage correct', () => {
         localStorage.setItem('order', JSON.stringify(mockOrderData))
-        const orderLocalStorage = JSON.parse(localStorage.getItem("order")) //Todo избыточно?
+        const orderLocalStorage = JSON.parse(localStorage.getItem("order"))
 
-        expect(orderLocalStorage).toStrictEqual(mockOrderData) //Todo избыточно?
-        expect(orderLocalStorage).not.toBeNull() //Todo избыточно
+        expect(orderLocalStorage).toStrictEqual(mockOrderData)
 
         expect(setLocalStorItemSpy).toHaveBeenCalledWith('order', JSON.stringify(mockOrderData))
         expect(getLocalStorItemSpy).toHaveBeenCalledWith('order')
@@ -132,9 +131,11 @@ describe("Product store", () => {
 
     it('store order decrease delete position', () => {
         const store = useOrderStore()
-        store.order.push({ id: 2, quantity: 1})
-        const mockId = '2' // Todo допилить интовый тип
-        store.decreaseOrder(mockId)
+        store.order.push({ id: 2, quantity: 2})
+        const mockIdStr = '2'
+        const mockIdInt = 2
+        store.decreaseOrder(mockIdStr)
+        store.decreaseOrder(mockIdInt)
 
         expect(store.order).toHaveLength(0)
         expect(setLocalStorItemSpy).toHaveBeenCalledWith('order', JSON.stringify(store.order))
