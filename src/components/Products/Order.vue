@@ -44,13 +44,13 @@ const orderTotalPrice =  computed(() => {
         <!--      <li v-for="item in order" :key="item" @click="emit('checked-product', item)">{{items[item].id}} {{items[item].title}} <span style="color: red">X</span></li>-->
 
         <li v-for="item in order.order" :key="item.id">
-          id = {{items[item.id].id}} на сумму: <span class="sum-price">{{ (item.quantity * items[item.id].price).toFixed(2) }}$</span><br>
+          id = {{items[item.id].id}} на сумму: <span class="sum-price" :data-testid="'position-quantity-sum-' + item.id">{{ (item.quantity * items[item.id].price).toFixed(2) }}$</span><br>
           {{items[item.id].title}} <br>
           <div class="btn-order-gr">
             <div>количество: <span style="color: cornflowerblue">{{item.quantity}}</span></div>
 
-            <button :id="item.id" @click="order.updateOrder($event.target.id)" style="color: green">+</button>
-            <button :id="item.id" @click="order.decreaseOrder($event.target.id)" style="color: red">-</button>
+            <button :id="item.id" @click="order.updateOrder($event.target.id)" :data-testid="'increase-quantity-' + item.id" style="color: green">+</button>
+            <button :id="item.id" @click="order.decreaseOrder($event.target.id)" :data-testid="'decrease-quantity-' + item.id" style="color: red">-</button>
           </div>
         </li>
       </ul>

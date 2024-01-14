@@ -8,6 +8,11 @@ export const useOrderStore =
 
         const orderLocalStorage = localStorage.getItem("order")
         if (orderLocalStorage) {
+            // order.value = JSON.parse(orderLocalStorage)
+            // order.value = [...JSON.parse(orderLocalStorage)]
+            // order.value = order.value.concat(JSON.parse(orderLocalStorage))
+            // order.value = [].concat(order.value, order.value.concat(JSON.parse(orderLocalStorage)))
+
             order.value.push(...JSON.parse(orderLocalStorage))
         }
 
