@@ -43,7 +43,7 @@ const products = computed( () => {
 <template>
   <section id="product-list" class="main">
     <ul >
-      <li v-for="(product, name, index) in products" :key="product.id">
+      <li v-for="(product, name, index) in products" :key="product.id" :data-testid="'product-item-' + product.id">
         <div>
           <label :for="product.id">
             <router-link :to="{'name':'product', params: {productId: product.id} }">{{product.title}}</router-link>

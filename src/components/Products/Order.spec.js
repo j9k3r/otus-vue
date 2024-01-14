@@ -58,9 +58,50 @@ describe("Products order component", () => {
         localStorage.clear()
     })
 
-    it('check mount', async () => {
+    it('Check mount', async () => {
         const wrapper = shallowMount(component)
+
         expect(wrapper.exists()).toBe(true)
+    })
+
+    it('Check computed items', async () => {
+        const store = useOrderStore()
+        store.order.push(...JSON.parse(mockOrderData))
+
+        const wrapper = shallowMount(component, {
+            propsData: {
+                rawProducts: mockProductsData
+            }
+        })
+
+        const computedItems = wrapper.vm.items //computed значение
+
+        let mockItems = {}
+
+        mockProductsData.forEach(item  => {
+            mockItems[`${item.id}`] = item
+        })
+
+        await flushPromises()
+
+        expect(computedItems).toStrictEqual(mockItems)
+    })
+
+    it('Check computed Sum order price', async () => {
+        const store = useOrderStore()
+        store.order.push(...JSON.parse(mockOrderData))
+
+        const wrapper = shallowMount(component, {
+            propsData: {
+                rawProducts: mockProductsData
+            }
+        })
+
+        const computedOrderTotalPrice = wrapper.vm.orderTotalPrice //computed значение
+
+        await flushPromises()
+
+        expect(computedOrderTotalPrice).toBe(sumPositionQuantity(mockProductsData, store.order))
     })
 
     it('Sum order price', async () => {
@@ -74,14 +115,10 @@ describe("Products order component", () => {
         })
 
         const sumOrderRendered = wrapper.find('.sum-price')
-        // console.log(sumOrder.attributes())  // возвращает класс
-        // console.log(sumOrderRendered.text()) // возвращает сумму
-        // console.log(wrapper.vm.orderTotalPrice) //computed значение
 
         await flushPromises()
         expect(sumOrderRendered.exists()).toBe(true)
         expect(parsePrice(sumOrderRendered.text())).toBe(sumPositionQuantity(mockProductsData, store.order))
-
 
         // console.log(mockProductsData[0].price + mockProductsData[1].price + mockProductsData[2].price)
         // console.log(sumPositionQuantity(mockProductsData, JSON.parse(mockOrderData)))
@@ -173,4 +210,5 @@ describe("Products order component", () => {
 
         return parseFloat(sumQuantity).toFixed(2)
     }
+
 })
