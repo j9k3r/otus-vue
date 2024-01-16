@@ -10,7 +10,7 @@ import ProductsApi from "@/components/services/productsApi";
 
 vi.mock('vue-router')
 // vi.mock('@/components/services/productsApi')
-describe("Products order component", () => {
+describe("ProductList order component", () => {
     const mockProductsData = JSON.parse( `[
             {
                 "id": 1,
@@ -84,8 +84,6 @@ describe("Products order component", () => {
             }
         })
 
-        expect(wrapper.exists()).toBe(true)
-
         const productElementsRendered = wrapper.findAll('#product-list > ul > li')
 
         expect(productElementsRendered.length).toBe(3)
@@ -94,7 +92,78 @@ describe("Products order component", () => {
         expect(wrapper.html()).toMatchSnapshot()
 
         // console.log(wrapper.html())
+        // console.log(productElementsRendered.at(0).element.outerHTML)
+        // productElementsRendered.forEach(wrapper => console.log(wrapper.html()))
+        // console.log([...productElementsRendered.map(wrapper => wrapper.html())])
     })
 
+    it('Check filter title', async () => {
+        const wrapper = shallowMount(component, {
+            propsData: {
+                rawProducts: mockProductsData,
+                title: '',
+                price: 0.00
+            },
+            global: {
+                stubs: ['RouterLink'],
+            }
+        })
+
+        await wrapper.setProps({ title: 'Fjallraven' })
+
+        const productElementsRendered = wrapper.findAll('#product-list > ul > li')
+
+        expect(productElementsRendered.length).toBe(1)
+        expect(wrapper.html()).not.toMatchSnapshot()
+
+        await wrapper.setProps({ title: '' })
+        expect(wrapper.html()).toMatchSnapshot()
+    });
+
+    it('Check filter price', async () => {
+        const wrapper = shallowMount(component, {
+            propsData: {
+                rawProducts: mockProductsData,
+                title: '',
+                price: 0.00
+            },
+            global: {
+                stubs: ['RouterLink'],
+            }
+        })
+
+        await wrapper.setProps({ price: 60 })
+
+        const productElementsRendered = wrapper.findAll('#product-list > ul > li')
+
+        expect(productElementsRendered.length).toBe(2)
+        expect(wrapper.html()).not.toMatchSnapshot()
+
+        await wrapper.setProps({ price: 0.00 })
+        expect(wrapper.html()).toMatchSnapshot()
+    });
+
+    it('Check filter price and title', async () => {
+        const wrapper = shallowMount(component, {
+            propsData: {
+                rawProducts: mockProductsData,
+                title: '',
+                price: 0.00
+            },
+            global: {
+                stubs: ['RouterLink'],
+            }
+        })
+
+        await wrapper.setProps({ price: 60,  title: 'Mens Casual Premium'})
+
+        const productElementsRendered = wrapper.findAll('#product-list > ul > li')
+
+        expect(productElementsRendered.length).toBe(1)
+        expect(wrapper.html()).not.toMatchSnapshot()
+
+        await wrapper.setProps({ price: 0.00,  title: ''})
+        expect(wrapper.html()).toMatchSnapshot()
+    });
 
 })
